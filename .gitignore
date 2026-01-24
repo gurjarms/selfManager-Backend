@@ -1,0 +1,8 @@
+venv/
+# db.sqlite3
+# serviceAccountKey.json
+# serviceAccountKey.*.json
+# *.pyc
+# __pycache__/
+# *.sqlite3
+.env

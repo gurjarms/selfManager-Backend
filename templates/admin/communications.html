@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Center - Self Manager</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #020617;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            padding-left: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-sub);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-item.logout {
+            margin-top: auto;
+            color: var(--danger);
+        }
+
+        .nav-item.logout:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .date {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        /* Comms Specific Styles */
+        .comms-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-sub);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-send {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background-color: #2563eb;
+        }
+
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-top: 0.5rem;
+        }
+
+        .logs-panel {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-success { color: var(--success); }
+        .log-error { color: var(--danger); }
+
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="brand">Self Admin</div>
+            <a href="{% url 'admin_dashboard' %}"
+                class="nav-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{% url 'communications' %}"
+                class="nav-item {% if request.resolver_match.url_name == 'communications' %}active{% endif %}">Communications</a>
+            <a href="/admin/auth/user/" class="nav-item">Users Management</a>
+            <a href="/admin/" class="nav-item">Django Admin</a>
+            <a href="{% url 'admin_logout' %}" class="nav-item logout">Logout</a>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div>
+                    <h1>Communication Center</h1>
+                    <span class="date">{% now "l, F j, Y" %}</span>
+                </div>
+                <div class="user-profile">
+                    {{ request.user.email }}
+                </div>
+            </header>
+
+            <div class="comms-container">
+                <!-- Email Section -->
+                <div class="card">
+                    <h2>📧 Email Blast</h2>
+                    <form method="POST" action="{% url 'send_bulk_email' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Recipients</label>
+                            <select name="recipient_type">
+                                <option value="all">All Users ({{ total_users }})</option>
+                                <option value="active">Active Users ({{ active_users }})</option>
+                                <option value="staff">Staff Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" name="subject" required placeholder="Important Announcement...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>HTML Content</label>
+                            <textarea name="body" required placeholder="<h1>Hello!</h1><p>We have updates...</p>"></textarea>
+                            <div class="help-text">HTML tags are supported for rich formatting.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn-send">Send Emails</button>
+                    </form>
+                    
+                    {% if email_results %}
+                    <div class="logs-panel">
+                        <h3 style="margin-top:0; font-size: 1rem; color: var(--text-main)">Results</h3>
+                        <div class="log-item log-success">✅ Successfully sent: {{ email_results.success_count }}</div>
+                        <div class="log-item log-error">❌ Failed: {{ email_results.fail_count }}</div>
+                        {% if email_results.failed_emails %}
+                        <div style="margin-top:0.5rem; font-size: 0.85rem; color: var(--text-sub)">Failed Recipients:</div>
+                        {% for fail in email_results.failed_emails %}
+                            <div class="log-item log-error">{{ fail }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Push Notification Section -->
+                <div class="card">
+                    <h2>🔔 Push Notifications</h2>
+                    <form method="POST" action="{% url 'send_bulk_notification' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Target Audience</label>
+                            <select name="recipient_type">
+                                <option value="all">All Registered Devices ({{ total_devices }} tokens)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Notification Title</label>
+                            <input type="text" name="title" required placeholder="New Update Available!">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Message Body</label>
+                            <textarea name="message" required placeholder="Open the app to see what's new..." style="min-height: 100px;"></textarea>
+                        </div>
+
+                         <div class="form-group">
+                            <label>Extra Data (JSON Format)</label>
+                            <textarea name="data_json" placeholder='{"screen": "Home", "id": "123"}' style="min-height: 60px; font-family: monospace; font-size: 0.85rem;"></textarea>
+                            <div class="help-text">Key-value pairs for deep linking.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn-send" style="background: var(--accent)">Send Push Broadcast</button>
+                    </form>
+                    
+                    {% if notif_results %}
+                    <div class="logs-panel">
+                        <h3 style="margin-top:0; font-size: 1rem; color: var(--text-main)">Results</h3>
+                        <div class="log-item log-success">🚀 Status: {{ notif_results.success }}</div>
+                        <div class="log-item log-error">❌ Failures: {{ notif_results.failure }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

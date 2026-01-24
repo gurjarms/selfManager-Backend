@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Dashboard - Self Manager</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #020617;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            padding-left: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-sub);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-item.logout {
+            margin-top: auto;
+            color: var(--danger);
+        }
+
+        .nav-item.logout:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: #020617;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Added margin-top to separate from top edge if preferred, 
+               but top: -2rem and padding-top could also work to make it gapless.
+               However, let's just make it sticky at the top. */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .date {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-title {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        /* Detailed Sections */
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .table-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .user-email {
+            font-weight: 500;
+        }
+
+        .user-date {
+            color: var(--text-sub);
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-neutral {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="brand">Self Admin</div>
+            <a href="{% url 'admin_dashboard' %}"
+                class="nav-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{% url 'communications' %}"
+                class="nav-item {% if request.resolver_match.url_name == 'communications' %}active{% endif %}">Communications</a>
+            <a href="/admin/auth/user/" class="nav-item">Users Management</a>
+            <a href="/admin/" class="nav-item">Django Admin</a>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div>
+                    <h1>Overview</h1>
+                    <span class="date">{% now "l, F j, Y" %}</span>
+                </div>
+                <div class="user-profile">
+                    {{ request.user.email }}
+                    <a href="{% url 'admin_logout' %}" class="nav-item logout">Logout</a>
+                </div>
+            </header>
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-icon">👥</span>
+                    <div class="stat-title">Total Users</div>
+                    <div class="stat-value">{{ total_users }}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🏠</span>
+                    <div class="stat-title">Families</div>
+                    <div class="stat-value">{{ total_families }}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">💾</span>
+                    <div class="stat-title">DB Storage</div>
+                    <div class="stat-value" style="color: var(--accent)">{{ db_size }}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">💸</span>
+                    <div class="stat-title">Total Expenses</div>
+                    <div class="stat-value">{{ total_expenses }}</div>
+                </div>
+            </section>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div>
+                    <h2 class="section-title">Newest Users</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr>
+                                    <td>
+                                        <div class="user-email">{{ user.email }}</div>
+                                        <div class="user-date">{% if user.first_name %}{{ user.first_name }}{% else %}No
+                                            Name{% endif %}</div>
+                                    </td>
+                                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if user.is_active %}
+                                        <span class="badge badge-success">Active</span>
+                                        {% else %}
+                                        <span class="badge badge-neutral">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">No users found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">Quick Stats</h2>
+                    <div class="stat-card" style="margin-bottom: 1rem;">
+                        <div class="stat-title">Active Notes</div>
+                        <div class="stat-value">{{ total_notes }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Udhar Records</div>
+                        <div class="stat-value">{{ total_udhar }}</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

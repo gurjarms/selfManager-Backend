@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Manager - Superadmin Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 1.5rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #3b82f6;
+        }
+
+        .logout-btn {
+            color: #ef4444;
+        }
+
+        .logout-btn:hover {
+            color: #f87171;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: #253346;
+        }
+
+        .stat-title {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 1.5rem;
+            opacity: 0.4;
+        }
+
+        /* Table Section */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+        }
+
+        .table-container {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .user-email {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .user-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div style="font-weight: 800; color: #fff; margin-right: auto; padding-left: 2rem;">SM Admin</div>
+            <a href="/admin/">Django Admin</a>
+            <a href="/api/">API Root</a>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">Logout</a>
+            <div style="width: 2rem;"></div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <div class="logo">System Overview</div>
+            <p class="subtitle">Welcome back, {{ request.user.email }}</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <div class="stat-title">Users</div>
+                <div class="stat-value">{{ total_users }}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">💾</span>
+                <div class="stat-title">Database</div>
+                <div class="stat-value" style="color: #a78bfa">{{ db_size }}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🏠</span>
+                <div class="stat-title">Families</div>
+                <div class="stat-value">{{ total_families }}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">⚡</span>
+                <div class="stat-title">Expenses</div>
+                <div class="stat-value" style="color: #60a5fa">{{ total_expenses }}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📝</span>
+                <div class="stat-title">Notes</div>
+                <div class="stat-value">{{ total_notes }}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📒</span>
+                <div class="stat-title">Udhar</div>
+                <div class="stat-value">{{ total_udhar }}</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Latest Registrations</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Details</th>
+                        <th>Date Joined</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in recent_users %}
+                    <tr>
+                        <td>
+                            <div class="user-email">{{ user.email }}</div>
+                            <div class="user-meta">
+                                {% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}No Name
+                                Provided{% endif %}
+                            </div>
+                        </td>
+                        <td>{{ user.date_joined|date:"M d, Y h:i A" }}</td>
+                        <td>
+                            {% if user.is_active %}
+                            <span class="badge badge-success">Active</span>
+                            {% else %}
+                            <span class="badge badge-warning">Inactive</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #64748b;">No users found yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        &copy; {% now "Y" %} Self Manager Backend. Secure Admin Portal.
+    </footer>
+</body>
+
+</html>

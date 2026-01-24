@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 40px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .otp-box {
+            background-color: #020617;
+            padding: 25px;
+            border-radius: 12px;
+            display: inline-block;
+            margin: 20px 0;
+            border: 1px dashed #3b82f6;
+        }
+
+        .otp-code {
+            font-size: 42px;
+            font-weight: 800;
+            color: #3b82f6;
+            letter-spacing: 12px;
+            margin-left: 12px;
+        }
+
+        .footer {
+            background-color: #1e293b;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            border-top: 1px solid #334155;
+        }
+
+        .brand-name {
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Self Manager</h1>
+        </div>
+        <div class="content">
+            <div class="title">{title}</div>
+            <div class="message">{message_top}</div>
+            <div class="otp-box">
+                <div class="otp-code">2456258</div>
+            </div>
+            <div class="message" style="margin-top: 30px;">{message_bottom}</div>
+        </div>
+        <div class="footer">
+            &copy; 2026 <a href="#" class="brand-name">Self Manager</a>. Secure OTP Verification System.
+        </div>
+    </div>
+</body>
+
+</html>

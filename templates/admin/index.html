@@ -1,0 +1,45 @@
+{% extends "admin/index.html" %}
+{% load dashboard_tags %}
+
+{% block content %}
+{% get_dashboard_stats as stats %}
+
+<style>
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-box {
+        background: var(--card-color, #1e293b);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color, #333);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted, #94a3b8);
+        margin-bottom: 5px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-color, #fff);
+    }
+
+    .stat-icon {
+        float: right;
+        opacity: 0.2;
+        font-size: 1.5rem;
+    }
+</style>
+
+{{ block.super }}
+{% endblock %}

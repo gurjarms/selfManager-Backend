@@ -1,0 +1,249 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Self Manager Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">
+        <span
+            style="background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">Self
+            Manager</span> Admin
+    </a></h1>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+    /* 
+       Theme Variables & Overrides 
+       Matching "Self Manager" Dark Theme
+       Primary: #3b82f6 (Blue)
+       Bg: #0f172a (Dark Slate)
+       Card: #1e293b (Lighter Slate)
+       Text: #f8fafc (White-ish)
+    */
+
+    :root {
+        --primary: #3b82f6;
+        --secondary: #60a5fa;
+        --accent: #8b5cf6;
+        --bg-color: #0f172a;
+        --card-color: #1e293b;
+        --text-color: #f8fafc;
+        --text-muted: #94a3b8;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --header-color: #000;
+        /* Darker than card */
+        --link-color: #60a5fa;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+
+        /* Django Admin Variable Overrides */
+        --header-bg: #1e293b;
+        --header-color: #f8fafc;
+        --header-link-color: #f8fafc;
+
+        --primary1: #3b82f6;
+        --primary2: #2563eb;
+
+        --body-bg: #0f172a;
+        --body-fg: #f8fafc;
+        --body-quiet-color: #94a3b8;
+        --body-loud-color: #ffffff;
+
+        --darkened-bg: #1e293b;
+        /* Breadcrumbs etc */
+        --selected-bg: #334155;
+        --selected-row: #334155;
+
+        --button-bg: #3b82f6;
+        --button-fg: #ffffff;
+        --button-hover-bg: #2563eb;
+
+        --default-button-bg: #334155;
+        --default-button-hover-bg: #475569;
+
+        --error-fg: #ef4444;
+
+        --object-tools-bg: #334155;
+        --object-tools-hover-bg: #475569;
+    }
+
+    /* Global Resets for Dark Mode */
+    body {
+        background-color: var(--body-bg) !important;
+        color: var(--body-fg) !important;
+        font-family: 'Inter', -apple-system, system-ui, sans-serif !important;
+    }
+
+    /* Header */
+    #header {
+        background: rgba(30, 41, 59, 0.95) !important;
+        backdrop-filter: blur(10px);
+        color: var(--header-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    #header a:link,
+    #header a:visited {
+        color: var(--header-link-color);
+    }
+
+    .module caption,
+    .module h2 {
+        background: #334155 !important;
+        color: #fff !important;
+    }
+
+    /* Links */
+    a:link,
+    a:visited {
+        color: var(--link-color) !important;
+    }
+
+    /* Content Module / Cards */
+    .module,
+    #changelist-filter {
+        background: var(--card-color) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Tables */
+    table {
+        background-color: transparent !important;
+    }
+
+    thead th {
+        background: #334155 !important;
+        color: #fff !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    tbody tr {
+        background: transparent !important;
+    }
+
+    tbody tr:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+
+    tbody tr:hover {
+        background: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    td,
+    th {
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    /* Forms & Inputs */
+    input[type=text],
+    input[type=password],
+    input[type=email],
+    input[type=url],
+    input[type=number],
+    input[type=tel],
+    select,
+    textarea {
+        background-color: #0f172a !important;
+        color: #fff !important;
+        border: 1px solid #475569 !important;
+        border-radius: 4px !important;
+        padding: 6px 10px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--primary) !important;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Breadcrumbs */
+    div.breadcrumbs {
+        background: transparent !important;
+        color: var(--text-muted) !important;
+    }
+
+    div.breadcrumbs a {
+        color: var(--text-muted) !important;
+    }
+
+    div.breadcrumbs a:hover {
+        color: var(--primary) !important;
+    }
+
+    /* Login Page Specifics */
+    .login #container {
+        background: var(--card-color) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px;
+    }
+
+    .login #header {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Buttons */
+    .button,
+    input[type=submit],
+    input[type=button],
+    .submit-row input {
+        background: var(--button-bg) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 10px 20px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        font-size: 0.8rem !important;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .button:hover,
+    input[type=submit]:hover {
+        background: var(--button-hover-bg) !important;
+        transform: translateY(-1px);
+    }
+
+    .button.default,
+    input[type=submit].default {
+        background: var(--primary) !important;
+    }
+
+    /* Sidebar / Filter */
+    #changelist-filter h2 {
+        background-color: #334155 !important;
+    }
+
+    #changelist-filter a {
+        color: var(--text-muted) !important;
+    }
+
+    #changelist-filter a:hover,
+    #changelist-filter li.selected a {
+        color: var(--primary) !important;
+    }
+
+    /* Help Text */
+    .help,
+    p.help,
+    form .aligned p.help {
+        color: var(--text-muted) !important;
+    }
+</style>
+{% endblock %}
+
+{% block nav-global %}
+<div style="float: right; padding: 10px 20px;">
+    <a href="{% url 'admin_dashboard' %}"
+        style="color: #f8fafc; margin-right: 15px; text-decoration: none; font-weight: 500;">Dashboard</a>
+    <a href="{% url 'communications' %}"
+        style="color: #f8fafc; margin-right: 15px; text-decoration: none; font-weight: 500;">Communications</a>
+    <a href="{% url 'admin:logout' %}" style="color: #ef4444; text-decoration: none; font-weight: 500;">Log out</a>
+</div>
+{% endblock %}
